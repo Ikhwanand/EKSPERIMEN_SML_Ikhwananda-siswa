@@ -1,9 +1,12 @@
-name: Preprocess Dataset
+name: Preprocess Dataset & MLOps Modelling
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main, kriteria-3 ]
+  pull_request:
+    branches: [ main, kriteria-3 ]
+    paths:
+      - 'MLProject/**'
   workflow_dispatch:
 
 jobs:
@@ -33,3 +36,45 @@ jobs:
       with:
         name: processed-dataset
         path: preprocessing/preprocessing_dataset/train_df_processed.csv
+
+  train-model:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12.3'
+          cache: 'pip'
+
+      - name: Setup Conda
+        uses: conda-incubator/setup-miniconda@v2
+        with:
+          activate-environment: mlflow-env
+          environment-file: MLProject/conda.yaml
+          auto-activate-base: false
+
+      - name: Install additional dependencies
+        shell: bash -l {0}
+        run: |
+          conda info
+          conda list
+          pip install mlflow scikit-learn pandas numpy matplotlib seaborn
+
+      - name: Train model and log to MLflow
+        shell: bash -l {0}
+        run: |
+          cd MLProject
+          export MLFLOW_TRACKING_URI="file:./mlruns"
+          python modelling.py
+
+      - name: Upload MLflow artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: mlflow-artifacts
+          path: |
+            MLProject/mlruns
+            MLProject/MLmodel
+            MLProject/conda.yaml
+            MLProject/images/*.png
