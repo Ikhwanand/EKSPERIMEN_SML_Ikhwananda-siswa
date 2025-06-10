@@ -53,3 +53,7 @@ def preprocessing_dataset(dataset_path=None, dataframe=None):
     return pd.concat([preprocessing_df, df['Churn']], axis=1)
 
 
+if __name__=='__main__':
+    preprocessing_df = preprocessing_dataset(dataset_path='../data/customer_churn_dataset-training-master.csv')
+    print("Preprocessing successfully")
+    
