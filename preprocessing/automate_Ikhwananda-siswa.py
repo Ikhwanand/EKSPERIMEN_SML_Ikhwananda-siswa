@@ -54,7 +54,7 @@ def preprocessing_dataset(dataset_path=None, dataframe=None):
 
 
 if __name__=='__main__':
-    preprocessing_df = preprocessing_dataset(dataset_path='../data/customer_churn_dataset-training-master.csv')
+    preprocessing_df = preprocessing_dataset(dataset_path='data/customer_churn_dataset-training-master.csv')
     preprocessing_df.to_csv('preprocessing/preprocessing_dataset/train_df_processed.csv', index=False)
     print("Preprocessing successfully")
     
