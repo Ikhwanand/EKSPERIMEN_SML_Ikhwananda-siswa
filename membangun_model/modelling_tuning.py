@@ -55,10 +55,7 @@ def train_and_log_model(model, model_name, X_train, y_train, X_test, y_test, par
     Train model and log everything to MLflow
     """
     with mlflow.start_run(run_name=model_name):
-        if params:
-            mlflow.log_params(params)
-        else:
-            mlflow.autolog()
+        mlflow.log_params(params)
             
         # Train model
         model.fit(X_train, y_train)
